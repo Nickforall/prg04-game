@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "sourceMap":  true,
+        "removeComments": true,
+        "target":"es5",
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "out": "dist/game.js"
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
