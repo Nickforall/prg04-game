@@ -9,7 +9,18 @@ class TextureManager {
     }
 
     public loadTilesheet() : void {
-        this.textureList["grass1"] = PIXI.Texture.fromImage('./resources/grass1.png');
+        this.addToList("empty");
+        this.addToList("grass1");
+        this.addToList("character1");
+        this.addToList("building1");
+        this.addToList("streetBot");
+        this.addToList("streetMid");
+        this.addToList("streetTop");
+    }
+
+    private addToList(name: string) {
+        this.textureList[name] = PIXI.Texture.fromImage('./resources/' + name + '.png');
+        this.textureList[name].baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     }
 
     public getByName(str: string) : PIXI.Texture {

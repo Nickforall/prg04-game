@@ -1,5 +1,5 @@
 enum GameState {
-    TITLE,
+    LOADING,
     PLAYING,
     DISCONNECTED
 }
