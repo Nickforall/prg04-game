@@ -27,13 +27,15 @@ class Player extends Entity {
     }
 
     private onKeyDown(keycode: number) {
+        if(this.map.game.isTyping) return;
+
         switch(keycode) {
             case(87):
                 if(this.y > 0 && this.map.isWalkable(this.x, this.y - 1))
                     this.y--;
                 break;
             case(83):
-                if(this.y < Map.mapHeight && this.map.isWalkable(this.x, this.y + 1))
+                if(this.y + 1 < Map.mapHeight && this.map.isWalkable(this.x, this.y + 1))
                     this.y++;
                 break;
             case(65):
@@ -41,7 +43,7 @@ class Player extends Entity {
                     this.x--;
                 break;
             case(68):
-                if(this.x < Map.mapWidth && this.map.isWalkable(this.x + 1, this.y))
+                if(this.x + 1 < Map.mapWidth && this.map.isWalkable(this.x + 1, this.y))
                     this.x++;
                 break;
         }
@@ -53,5 +55,11 @@ class Player extends Entity {
 
         // the actions below this line only apply to local players
         if(!this.isLocal) return;
+    }
+
+    public chat(content: string) {
+        let bubble = document.createElement('chatbubble')
+        document.createTextNode(content);
+
     }
 }

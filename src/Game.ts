@@ -11,6 +11,7 @@ class Game {
     private state: GameState;
     private map: Map;
     private totalTicks: number;
+    public isTyping: boolean;
     public stage: PIXI.Container;
     public textures: TextureManager;
 
@@ -43,7 +44,6 @@ class Game {
 
         this.textures.loadTilesheet();
         this.map.populate();
-        this.map.render();
 
         this.renderer.render(this.stage);
 
@@ -55,10 +55,31 @@ class Game {
         // add the local player to the map
         this.map.addPlayer(0, 0, true);
 
+        this.initClientChat();
+
         // This arrow function is needed because fucking javascript scopes.
         requestAnimationFrame(() => {
             this.update();
         })
+    }
+
+    public initClientChat() {
+        let speechInput = (<HTMLInputElement> document.getElementById("speechInput"));
+
+        speechInput.addEventListener("focus", () => {
+            this.isTyping = true;
+        });
+        speechInput.addEventListener("focusout", () => {
+            this.isTyping = false;
+        });
+
+        document.addEventListener('keydown', (e: KeyboardEvent) => {
+            if(this.isTyping && e.keyCode == 13) {
+                console.log(speechInput.value);
+                speechInput.value = "";
+                speechInput.blur();
+            }
+        });
     }
 
     private update() {

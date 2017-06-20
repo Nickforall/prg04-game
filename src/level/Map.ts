@@ -20,11 +20,22 @@ class Map {
     public populate() {
         console.log("populating map...")
 
-        //loop through each row an column until the map has been filled with tiles
+        //loop through each row and column until the map has been filled with tiles
         for(var x = 0; x < Map.mapWidth; x++) {
             for(var y = 0; y < Map.mapHeight; y++) {
                 //create each tile and initialize it.
-                let tile = new Tile(x, y, this.game.textures.getByName("grass1"), this);
+                var tex = "grass1";
+
+                // street
+                if(y == 7) tex = "streetTop";
+                if(y == 8) tex = "streetMid";
+                if(y == 9) tex = "streetBot";
+
+                // put weed
+                if(x > 14 && x < 28 && y > 10 && y < 17) tex = "weed";
+
+                let tile = new Tile(x, y, this.game.textures.getByName(tex), this);
+
                 tile.init();
 
                 this.map.push(tile);
@@ -80,14 +91,6 @@ class Map {
         for(let entity of this.entities) {
             entity.tick(number);
         }
-    }
-
-    /**
-     * Adds all tiles to the stage
-     * @return {void}
-     */
-    public render() {
-        console.log("rendering map...")
     }
 
     public tick(tickNumber: number) {

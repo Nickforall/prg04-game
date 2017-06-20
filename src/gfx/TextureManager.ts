@@ -16,6 +16,7 @@ class TextureManager {
         this.addToList("streetBot");
         this.addToList("streetMid");
         this.addToList("streetTop");
+        this.addToList("weed");
     }
 
     private addToList(name: string) {
