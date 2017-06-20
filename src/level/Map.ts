@@ -2,6 +2,8 @@ class Map {
     private map: Array<Tile>;
     public game: Game;
     private entities: Array<Entity>;
+    public players: any;
+    private net: MapNetHandler;
 
     static mapWidth: number = 36;
     static mapHeight: number = 18;
@@ -10,15 +12,19 @@ class Map {
     constructor(game: Game) {
         this.map = [];
         this.entities = [];
+        this.players = {};
         this.game = game;
+
+        this.net = new MapNetHandler(this);
     }
 
     /**
      * Fills the map with an amazing grassland
      * @return {void}
      */
-    public populate() {
-        console.log("populating map...")
+    public init() {
+        console.log("populating map...");
+        this.net.addHandlers(this.game.network.getSocket());
 
         //loop through each row and column until the map has been filled with tiles
         for(var x = 0; x < Map.mapWidth; x++) {
@@ -33,6 +39,8 @@ class Map {
 
                 // put weed
                 if(x > 14 && x < 28 && y > 10 && y < 17) tex = "weed";
+                if(x > 2 && x < 7 && y > 10 && y < 17) tex = "weed";
+
 
                 let tile = new Tile(x, y, this.game.textures.getByName(tex), this);
 
@@ -50,8 +58,15 @@ class Map {
      * @param  {boolean} local [description]
      * @return {void}
      */
-    public addPlayer(x: number, y: number, local: boolean) {
-        this.entities.push(new Player(x, y, local, this, this.game.textures.getByName("character1")))
+    public addPlayer(x: number, y: number, local: boolean, id: number = 0) {
+        let p = new Player(x, y, local, this, this.game.textures.getByName("character1"));
+
+        if(local) this.game.network.getSocket().emit("newPlayer", {x: p.x, y: p.y});
+        this.entities.push(p);
+
+        if(!local) {
+            this.players[id] = p;
+        }
     }
 
     public addBuilding(x: number, y: number, textureName: string) {

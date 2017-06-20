@@ -13,6 +13,7 @@ class TextureManager {
         this.addToList("grass1");
         this.addToList("character1");
         this.addToList("building1");
+        this.addToList("building2");
         this.addToList("streetBot");
         this.addToList("streetMid");
         this.addToList("streetTop");

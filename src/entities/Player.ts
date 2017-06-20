@@ -1,6 +1,6 @@
 class Player extends Entity {
     private isLocal: boolean;
-    private sprite: PIXI.Sprite;
+    public sprite: PIXI.Sprite;
     private map: Map;
 
     constructor(x: number, y:number, local: boolean, map: Map, texture: PIXI.Texture) {
@@ -27,7 +27,7 @@ class Player extends Entity {
     }
 
     private onKeyDown(keycode: number) {
-        if(this.map.game.isTyping) return;
+        if(this.map.game.isTyping || !this.isLocal) return;
 
         switch(keycode) {
             case(87):
@@ -47,6 +47,13 @@ class Player extends Entity {
                     this.x++;
                 break;
         }
+
+        this.map.game.network.getSocket().emit("playerMove", {x: this.x, y: this.y});
+    }
+
+    public updatePos(x: number, y:number) {
+        this.x = x;
+        this.y = y;
     }
 
     public tick(tickNumber: number): void {
@@ -59,7 +66,6 @@ class Player extends Entity {
 
     public chat(content: string) {
         let bubble = document.createElement('chatbubble')
-        document.createTextNode(content);
-
+        bubble.appendChild(document.createTextNode(content));
     }
 }

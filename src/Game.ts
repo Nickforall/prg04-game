@@ -5,6 +5,7 @@
 /// <reference path="level/Tile.ts"/>
 /// <reference path="entities/Entity.ts"/>
 /// <reference path="entities/Player.ts"/>
+/// <reference path="net/NetworkManager.ts"/>
 
 
 class Game {
@@ -14,6 +15,7 @@ class Game {
     public isTyping: boolean;
     public stage: PIXI.Container;
     public textures: TextureManager;
+    public network: NetworkManager
 
     // either a GL renderer or a Canvas renderer, depends on what the
     // `autoDetectRenderer` method returns
@@ -27,6 +29,7 @@ class Game {
         //load our classes
         this.textures = new TextureManager();
         this.map = new Map(this);
+        this.network = new NetworkManager();
 
         //load pixi logic into dom
         this.stage = new PIXI.Container();
@@ -43,17 +46,18 @@ class Game {
         console.log("Initializing game...");
 
         this.textures.loadTilesheet();
-        this.map.populate();
+        this.network.init();
+        this.map.init();
 
         this.renderer.render(this.stage);
 
         // build a beautiful map
         this.map.addBuilding(5, 3, "building1");
-        this.map.addBuilding(12, 3, "building1");
+        this.map.addBuilding(12, 3, "building2");
         this.map.addBuilding(19, 3, "building1");
 
         // add the local player to the map
-        this.map.addPlayer(0, 0, true);
+        this.map.addPlayer(1, 1, true);
 
         this.initClientChat();
 
