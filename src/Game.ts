@@ -9,7 +9,6 @@
 
 
 class Game {
-    private state: GameState;
     private map: Map;
     private totalTicks: number;
     public isTyping: boolean;
@@ -22,8 +21,6 @@ class Game {
     private renderer: any;
 
     constructor(gameDiv: HTMLCanvasElement) {
-
-        this.state = GameState.PLAYING;
         this.totalTicks = 0;
 
         //load our classes
@@ -67,6 +64,10 @@ class Game {
         })
     }
 
+    /**
+     * Initializes all chat logic
+     * @return {[type]} [description]
+     */
     public initClientChat() {
         let speechInput = (<HTMLInputElement> document.getElementById("speechInput"));
 
@@ -89,6 +90,10 @@ class Game {
         });
     }
 
+    /**
+     * Updates the game
+     * @return {[type]} [description]
+     */
     private update() {
         var t = ++this.totalTicks;
 
@@ -99,9 +104,5 @@ class Game {
         requestAnimationFrame(() => {
             this.update();
         })
-    }
-
-    private setState(state: GameState) {
-        this.state = state;
     }
 }

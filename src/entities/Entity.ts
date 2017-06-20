@@ -10,4 +10,15 @@ class Entity extends GameObject {
     public tick(tickNumber: number): void {
         return;
     }
+
+    /**
+     * Updates the Entity's position
+     * @param  {number} x [description]
+     * @param  {number} y [description]
+     * @return {[type]}   [description]
+     */
+    public updatePos(x: number, y:number) {
+        this.x = x;
+        this.y = y;
+    }
 }

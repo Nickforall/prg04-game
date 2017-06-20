@@ -8,6 +8,9 @@ class TextureManager {
         this.textureList = {};
     }
 
+    /**
+     * Loads all the resources into the TextureManager
+     */
     public loadTilesheet() : void {
         this.addToList("empty");
         this.addToList("grass1");
@@ -23,11 +26,21 @@ class TextureManager {
         this.addToList("weed");
     }
 
+    /**
+     * Adds a texture to the TextureManager
+     * @param  {string} name [description]
+     * @return {[type]}      [description]
+     */
     private addToList(name: string) {
         this.textureList[name] = PIXI.Texture.fromImage('./resources/' + name + '.png');
         this.textureList[name].baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     }
 
+    /**
+     * Gets a texture by name
+     * @param  {string}       str [description]
+     * @return {PIXI.Texture}     [description]
+     */
     public getByName(str: string) : PIXI.Texture {
         return this.textureList[str];
     }

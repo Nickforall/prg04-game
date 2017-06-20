@@ -4,7 +4,7 @@ class Player extends Entity {
     private map: Map;
 
     static skins: Array<string> = ["character1", "character2", "character3", "character4"];
-    
+
     constructor(x: number, y:number, local: boolean, map: Map, texture: PIXI.Texture) {
         super(x, y)
         this.isLocal = local;
@@ -19,6 +19,10 @@ class Player extends Entity {
         this.preRender();
     }
 
+    /**
+     * Set the properties in order to render
+     * @return {[type]} [description]
+     */
     private preRender() {
         this.sprite.x = Map.tileSize * this.x;
         this.sprite.y = Map.tileSize * this.y;
@@ -28,6 +32,11 @@ class Player extends Entity {
         this.map.game.stage.addChild(this.sprite);
     }
 
+    /**
+     * Handles a key event
+     * @param  {number} keycode [description]
+     * @return {[type]}         [description]
+     */
     private onKeyDown(keycode: number) {
         if(this.map.game.isTyping || !this.isLocal) return;
 
@@ -53,11 +62,10 @@ class Player extends Entity {
         this.map.game.network.getSocket().emit("playerMove", {x: this.x, y: this.y});
     }
 
-    public updatePos(x: number, y:number) {
-        this.x = x;
-        this.y = y;
-    }
-
+    /**
+     * [tick description]
+     * @param {number} tickNumber [description]
+     */
     public tick(tickNumber: number): void {
         this.sprite.x = Map.tileSize * this.x;
         this.sprite.y = Map.tileSize * this.y;
@@ -66,6 +74,11 @@ class Player extends Entity {
         if(!this.isLocal) return;
     }
 
+    /**
+     * Spawns a chat bubble on top of the player
+     * @param  {string} content [description]
+     * @return {[type]}         [description]
+     */
     public chat(content: string) {
         let bubble = document.createElement('chatbubble')
         bubble.appendChild(document.createTextNode(content));
