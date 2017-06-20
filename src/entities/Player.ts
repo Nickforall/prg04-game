@@ -3,6 +3,8 @@ class Player extends Entity {
     public sprite: PIXI.Sprite;
     private map: Map;
 
+    static skins: Array<string> = ["character1", "character2", "character3", "character4"];
+    
     constructor(x: number, y:number, local: boolean, map: Map, texture: PIXI.Texture) {
         super(x, y)
         this.isLocal = local;
@@ -67,5 +69,24 @@ class Player extends Entity {
     public chat(content: string) {
         let bubble = document.createElement('chatbubble')
         bubble.appendChild(document.createTextNode(content));
+
+        var top = 0;
+
+        bubble.style.left = this.x * 16 * 2 + "px";
+        top = (this.y * 16 * 2) - 28
+
+        bubble.style.top = top + "px";
+
+        document.body.appendChild(bubble);
+
+        let interval = setInterval(() => {
+            top = top - bubble.clientHeight;
+            bubble.style.top = top + "px";
+
+            if(top < 0) {
+                clearInterval(interval);
+                document.body.removeChild(bubble)
+            }
+        }, 800)
     }
 }

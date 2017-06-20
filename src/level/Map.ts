@@ -3,6 +3,7 @@ class Map {
     public game: Game;
     private entities: Array<Entity>;
     public players: any;
+    public localPlayer: Player;
     private net: MapNetHandler;
 
     static mapWidth: number = 36;
@@ -58,28 +59,41 @@ class Map {
      * @param  {boolean} local [description]
      * @return {void}
      */
-    public addPlayer(x: number, y: number, local: boolean, id: number = 0) {
-        let p = new Player(x, y, local, this, this.game.textures.getByName("character1"));
+    public addPlayer(x: number, y: number, local: boolean, texture: string, id: number = 0) {
+        let p = new Player(x, y, local, this, this.game.textures.getByName(texture));
 
-        if(local) this.game.network.getSocket().emit("newPlayer", {x: p.x, y: p.y});
-        this.entities.push(p);
-
-        if(!local) {
+        if(local) {
+            this.game.network.getSocket().emit("newPlayer", {x: p.x, y: p.y, skin: texture});
+            this.localPlayer = p;
+        } else {
             this.players[id] = p;
         }
+
+        // push in order to handle ticks
+        this.entities.push(p);
     }
 
-    public addBuilding(x: number, y: number, textureName: string) {
+    /**
+     * [addBuilding description]
+     * @param  {number}    x           [description]
+     * @param  {number}    y           [description]
+     * @param  {string}    textureName [description]
+     * @param  {number =           4}           hitboxX [description]
+     * @param  {number =           3}           hitboxY [description]
+     * @return {[type]}                [description]
+     */
+    public addBuilding(x: number, y: number, textureName: string,
+                            hitboxX: number = 4, hitboxY: number = 3) {
+
         let sprite = new PIXI.Sprite(this.game.textures.getByName(textureName));
 
         console.log("Adding building at", x, ",", y)
 
-        // All buildings are 3x4 for now
-        for (var i = 0; i < 3; i++) {
-            this.getTileAt(x, y + i).setWalkable(false);
-            this.getTileAt(x + 1, y + i).setWalkable(false);
-            this.getTileAt(x + 2, y + i).setWalkable(false);
-            this.getTileAt(x + 3, y + i).setWalkable(false);
+        for (var j = 0; j < hitboxX; j++) {
+            // All buildings are 3x4 for now
+            for (var i = 0; i < hitboxY; i++) {
+                this.getTileAt(x + j, y + i).setWalkable(false);
+            }
         }
 
         sprite.x = x * Map.tileSize;
@@ -88,11 +102,23 @@ class Map {
         this.game.stage.addChild(sprite);
     }
 
+    /**
+     * Gets the tile at a specific coordinate
+     * @param  {number} x [description]
+     * @param  {number} y [description]
+     * @return {Tile}     [description]
+     */
     public getTileAt(x: number, y: number): Tile {
         let tile: Tile = this.map[y * Map.mapWidth + x];
         return tile;
     }
 
+    /**
+     * Gets whether the tile is walkable on a certain coordinate
+     * @param  {number}  x [description]
+     * @param  {number}  y [description]
+     * @return {boolean}   [description]
+     */
     public isWalkable(x: number, y: number) :boolean {
         return this.getTileAt(x, y).isWalkable;
     }
@@ -108,6 +134,11 @@ class Map {
         }
     }
 
+    /**
+     * handles map logic for each animation frame
+     * @param  {number} tickNumber [description]
+     * @return {[type]}            [description]
+     */
     public tick(tickNumber: number) {
         this.entityTicks(tickNumber);
     }

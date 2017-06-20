@@ -57,7 +57,7 @@ class Game {
         this.map.addBuilding(19, 3, "building1");
 
         // add the local player to the map
-        this.map.addPlayer(1, 1, true);
+        this.map.addPlayer(1, 1, true, Player.skins[Math.floor(Player.skins.length * Math.random())]);
 
         this.initClientChat();
 
@@ -79,9 +79,12 @@ class Game {
 
         document.addEventListener('keydown', (e: KeyboardEvent) => {
             if(this.isTyping && e.keyCode == 13) {
-                console.log(speechInput.value);
+                let val = (speechInput.value);
                 speechInput.value = "";
                 speechInput.blur();
+
+                this.map.localPlayer.chat(val);
+                this.network.getSocket().emit("playerChat", {txt: val});
             }
         });
     }
