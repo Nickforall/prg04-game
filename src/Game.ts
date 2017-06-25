@@ -34,7 +34,11 @@ class Game {
         this.stage.scale.x = 2;
         this.stage.scale.y = 2;
         //build pixi's renderer
-        this.renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, {
+
+        let innerHeight = (window.innerHeight < Map.mapHeight * Map.tileSize * 2) ? Map.mapHeight * Map.tileSize * 2 : window.innerHeight;
+        let innerWidth = (window.innerWidth < Map.mapHeight * Map.tileSize * 2) ? Map.mapHeight * Map.tileSize * 2 : window.innerWidth;
+
+        this.renderer = PIXI.autoDetectRenderer(innerWidth, innerHeight, {
             view: gameDiv
         });
     }
